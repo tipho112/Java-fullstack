@@ -52,13 +52,7 @@ public class RequestHandler extends Thread {
 			if("GET".equals(tokens[0])) {
 				responseStaticResource(outputStream, tokens[1], tokens[2]);
 			} else { // POST, DELETE, PUT, HEAD, CONNECT
-				
-				 // HTTP/1.1 400 Bad Request\r\n
-				 // Content-Type:text/html; charset=utf-8\r\n
-				 // \r\n
-				 // html 에러 문서(./webapp/error/400.html)
-
-				 //response400Error();
+				response400Error(outputStream, tokens[1], tokens[2]);				 
 			}
 
 		} catch(Exception ex) {
@@ -73,6 +67,32 @@ public class RequestHandler extends Thread {
 				consoleLog( "error:" + ex );
 			}
 		}			
+	}
+
+	private void response400Error(OutputStream outputStream, String uri, String protocol) throws IOException {
+		// HTTP/1.1 400 Bad Request\r\n
+		// Content-Type:text/html; charset=utf-8\r\n
+		// \r\n
+		// html 에러 문서(./webapp/error/400.html)
+		if("/".equals(uri)) {
+			uri = "/error/400.html";
+		}
+		
+		File file = new File(DOCUMENT_ROOT + uri);
+		if(!file.exists()) {
+			
+			return;
+		}
+		
+		// nio
+		byte[] body = Files.readAllBytes(file.toPath());
+		String contentType = Files.probeContentType(file.toPath());
+				
+		// response
+		outputStream.write((protocol + " 200 OK\r\n").getBytes( "UTF-8" ));
+		outputStream.write(("Content-Type:" + contentType + "; charset=utf-8\r\n").getBytes("UTF-8"));
+		outputStream.write("\r\n".getBytes("UTF-8"));
+		outputStream.write(body);
 	}
 
 	public void responseStaticResource(OutputStream outputStream, String uri, String protocol) throws IOException {
