@@ -129,8 +129,6 @@ public class RequestHandler extends Thread {
 		File file = new File(DOCUMENT_ROOT + uri);
 		if(!file.exists()) {
 
-			
-			response404Error();
 			return;
 		}
 		
