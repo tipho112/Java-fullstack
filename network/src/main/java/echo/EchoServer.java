@@ -20,7 +20,7 @@ public class EchoServer {
 			
 			// 3. accept
 			while(true) {
-				Socket socket = serverSocket.accept();									
+				Socket socket = serverSocket.accept();						
 				new EchoServerReceiveThread(socket).start();
 			}
 			
