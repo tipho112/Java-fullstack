@@ -94,6 +94,32 @@ public class RequestHandler extends Thread {
 		outputStream.write("\r\n".getBytes("UTF-8"));
 		outputStream.write(body);
 	}
+	
+	public void response404Error(OutputStream outputStream, String uri, String protocol) throws IOException {
+		 // HTTP/1.1 404 Not Found\r\n
+		 // Content-Type:text/html; charset=utf-8\r\n
+		 // \r\n
+		 // html 에러 문서(./webapp/error/404.html)
+		if("/".equals(uri)) {
+			uri = "/error/404.html";
+		}
+		
+		File file = new File(DOCUMENT_ROOT + uri);
+		if(!file.exists()) {
+			
+			return;
+		}
+		
+		// nio
+		byte[] body = Files.readAllBytes(file.toPath());
+		String contentType = Files.probeContentType(file.toPath());
+				
+		// response
+		outputStream.write((protocol + " 200 OK\r\n").getBytes( "UTF-8" ));
+		outputStream.write(("Content-Type:" + contentType + "; charset=utf-8\r\n").getBytes("UTF-8"));
+		outputStream.write("\r\n".getBytes("UTF-8"));
+		outputStream.write(body);		
+	}
 
 	public void responseStaticResource(OutputStream outputStream, String uri, String protocol) throws IOException {
 		if("/".equals(uri)) {
@@ -102,12 +128,9 @@ public class RequestHandler extends Thread {
 		
 		File file = new File(DOCUMENT_ROOT + uri);
 		if(!file.exists()) {
-			 // HTTP/1.1 404 Not Found\r\n
-			 // Content-Type:text/html; charset=utf-8\r\n
-			 // \r\n
-			 // html 에러 문서(./webapp/error/404.html)
+
 			
-			// response404Error();
+			response404Error();
 			return;
 		}
 		
