@@ -32,6 +32,7 @@ public class ChatWindow {
 	public void show() {
 		//1. UI 초기화
 		// Button
+		// 123456
 		buttonSend.setBackground(Color.GRAY);
 		buttonSend.setForeground(Color.WHITE);
 		buttonSend.addActionListener( new ActionListener() {
