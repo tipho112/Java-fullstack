@@ -30,5 +30,6 @@
 	
   <modules>
   	<module>network</module>
+  	<module>jdbc-practices</module>
   </modules>
 </project>
